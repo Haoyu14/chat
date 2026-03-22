@@ -11,8 +11,18 @@
         var apikey_encoded = "MWI3NjBlMzA0ZTQwNGMxYWEyYmRmYjc1MTZlZGFhMDkuWU16Smh1VTFpaHZVSVQxVw==";
 
         function decode(encoded) {
-            return atob(encoded);
+        try {
+            if (!encoded || encoded === "YWI3NjBlMzA0ZTQwNGMxYWEyYmRmYjc1MTZlZGFhMDkuWU16Smh1VTFpaHZVSVQxVw==") {
+                return ""; // 未配置时使用空字符串或 fallback
+            }
+            var str = encoded.replace(/-/g, '+').replace(/_/g, '/');
+            while (str.length % 4) str += '=';
+            return atob(str);
+        } catch (e) {
+            console.error('API Key 解码失败:', e);
+            return encoded; // 解码失败时返回原值
         }
+    }
 
         var apikey = decode(apikey_encoded); 
 
@@ -554,8 +564,30 @@
     </style>
     <!-- Markdown 依赖库 -->
     <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
-    <link rel="stylesheet"
-        href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown.min.css">
+    <!-- 备用：如果 CDN 失败，使用内联版本 -->
+    <script>
+    if (typeof window.markdownit !== 'function') {
+        // 简化的 markdown 处理（fallback）
+        window.markdownit = function() {
+            return {
+                render: function(src) {
+                    // 基础 markdown 转换
+                    return src
+                        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                        .replace(/\*\*(.*)\*\*/gim, '<b>$1</b>')
+                        .replace(/\*(.*)\*/gim, '<i>$1</i>')
+                        .replace(/`([^`]+)`/gim, '<code>$1</code>')
+                        .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
+                        .replace(/\n/gim, '<br>');
+                },
+                use: function() { return this; }
+            };
+        };
+    }
+    </script>
     <!-- LaTeX 依赖库 -->
     <script>
         MathJax = {
