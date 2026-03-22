@@ -7,26 +7,21 @@
     <title>简易ChatGPT</title>
     <script>
         // AI配置
-        var api = "https://api.openai.com/v1/chat/completions"; // 您的api地址
-        var apikey = ""; // 您的api-key
+        var api = "https://open.bigmodel.cn/api/paas/v4/chat/completions"; 
+        var apikey_encoded = "MWI3NjBlMzA0ZTQwNGMxYWEyYmRmYjc1MTZlZGFhMDkuWU16Smh1VTFpaHZVSVQxVw==";
+
+        function decodeKey(encoded) {
+            return atob(encoded);
+        }
+
+        var apikey = decodeKey(apikey_encoded); 
 
         var system_prompt = null; // 系统提示词，可留空
         var temperature = 0.9 // 模型温度，越高模型的创造力就越高，输出越随机。此配置对Deepseek-R1无效。
         var stream = true; // 是否使用流式输出。
 
         var llm_selection = [
-            ["gpt-4o", "GPT-4o"],
-            ["o1-mini", "GPT o1 mini"],
-            ["o1-sim", "[+]Claude思维链"],
-            ["deepseek-v3", "Deepseek V3"],
-            ["deepseek-r1", "Deepseek R1"],
-            ["sonar-reasoning", "Perplexity 搜索"],
-            ["claude-3-5-sonnet-20241022", "Claude-3.5"],
-            ["gemini-1.5-pro-latest", "Gemini 1.5"],
-            ["gemini-2.0-flash-exp", "Gemini 2.0"],
-            ["grok-3", "Grok 3"],
-            ["grok-3-reasoner", "Grok 3 思考"],
-            ["gemini-2.0-flash-thinking-exp", "Gemini 思考"],
+            ["glm-4.5-air", "GLM-4.5-Air"],
         ]; // API可用模型配置，每行第一个是模型代码，第二个是模型在下拉菜单中显示的内容。注意尾部逗号。
         // 如果使用prompt，请在第一列自行配置一个名字，然后在下方 “prompt_model_list” 数组中，配置prompt和真实模型。
 
@@ -35,11 +30,11 @@
         var webFontFamily = "华文中宋, 微软雅黑, 楷体";// 网页全局字体，多个字体用英文逗号隔开，越靠前优先级越高
 
         // 使用额外变量保存的prompt。请注意，prompt两边使用单引号进行引用，因此内部的文本出现的单引号需要转义。
-        var o1_prompt = '# 语言: zh-CN\n# 用途: 逐步解释推理过程，输出为 Markdown 格式\n\ndef 分析助理():\n    """你是一个擅长逐步解释推理过程的AI助手"""\n    return {\n        "风格": ["理性", "细致", "批判性思维"],\n        "擅长": "多步骤推理",\n        "输出格式": "Markdown"\n    }\n\nclass 推理助手(输入):\n    def __init__(self, 输入):\n        self.状态 = "确认用户问题" # 初始化第1步\n        self.输入 = 输入\n\n    def 逐步推理(self):\n        """你会逐步解释每一步的推理过程并提供结论"""\n        \n        def 标题(状态):\n            """为每一步推理生成标题，包含对替代答案的探索。考虑你可能出错的情况，以及如果推理错误，错误可能出现在哪里。"""\n            return 标题\n\n        def 内容描述(状态, 输入):\n            """进行认真细致的推理，注意你作为llm的局限性以及你能做什么和不能做什么。使用最佳实践。"""\n            return 推理过程\n\n        def 决定下一步(状态, 输入, 当前步骤):\n            """根据状态、输入和当前步骤动态决定下一步"""\n            # 至少要有 3 步推理\n            if 当前步骤 >= 3 and 是否可以得出结论(状态, 输入) or 当前步骤 >=  8: \n                return "最终结论"\n            else:\n                return 生成下一步(状态, 输入)\n\n        def 是否可以得出结论(状态, 输入):\n            """判断是否已经可以得出结论"""\n            return True or False\n\n        def 生成下一步(状态, 输入):\n            """根据输入和当前推理步骤生成下一步推理"""\n            return 下一步推理\n\n        当前步骤 = 0\n        \n        md_output = "# 推理过程\n"\n        while self.状态 != "最终结论":\n            当前步骤 += 1\n            next_action = 决定下一步(self.状态, self.输入, 当前步骤)\n            \n            md_output += f"## 步骤: {标题(self.状态)}\n"\n            md_output += f"- **内容**: {内容描述(self.状态, self.输入)}\n"\n            if next_action != "最终结论":\n                md_output += f"- **下一步**: {next_action}\n\n"\n            \n            self.状态 = next_action\n        \n        return md_output\n\ndef start():\n    """启动时运行"""\n    system_role = 分析助理()\n    输入 = input()\n    助手 = 推理助手(输入)\n    结果 = 助手.逐步推理()\n\n    print(结果)\n\n\nif __name__ == "__main__":\n    start()\n\n# 请按照伪代码的规则运行，直接执行 main。**不要尝试解释代码**';
+        var o1_prompt = '遵循你的系统提示词'
 
         // 配置prompt，第一列是你为模型命的名（即llm_selection即第一列的内容），第二列是真实使用的模型，第三列是提示词变量名。
         var prompt_model_list = [
-            ["o1-sim", "claude-3-5-sonnet-20241022", o1_prompt],
+            ["GLM-4.5-Air", "glm-4.5-air", o1_prompt],
         ]
 
     </script>
