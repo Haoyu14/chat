@@ -10,13 +10,13 @@
         var api = "https://open.bigmodel.cn/api/paas/v4/chat/completions"; 
         var apikey_encoded = "MWI3NjBlMzA0ZTQwNGMxYWEyYmRmYjc1MTZlZGFhMDkuWU16Smh1VTFpaHZVSVQxVw==";
 
-        function decodeKey(encoded) {
+        function decode(encoded) {
             return atob(encoded);
         }
 
-        var apikey = decodeKey(apikey_encoded); 
+        var apikey = decode(apikey_encoded); 
 
-        var system_prompt = null; // 系统提示词，可留空
+        var system_prompt = decode(); // 系统提示词，可留空
         var temperature = 0.9 // 模型温度，越高模型的创造力就越高，输出越随机。此配置对Deepseek-R1无效。
         var stream = true; // 是否使用流式输出。
 
@@ -553,7 +553,7 @@
         }
     </style>
     <!-- Markdown 依赖库 -->
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.3.2/dist/markdown-it.min.js"></script>
     <link rel="stylesheet"
         href="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown.min.css">
     <!-- LaTeX 依赖库 -->
